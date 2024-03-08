@@ -79,8 +79,8 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 				children: [
 					{
-						path: '/system/menu',
-						name: 'systemMenu',
+						path: '/system/resources',
+						name: 'systemResources',
 						component: () => import('/@/views/system/resources/index.vue'),
 						meta: {
 							title: '资源管理',
@@ -94,11 +94,11 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
-						path: '/system/role',
-						name: 'systemRole',
-						component: () => import('/@/views/system/role/index.vue'),
+						path: '/system/userGroup',
+						name: 'systemUserGroup',
+						component: () => import('/@/views/system/userGroup/index.vue'),
 						meta: {
-							title: '角色管理',
+							title: '用户组管理',
 							isLink: '',
 							isHide: false,
 							isKeepAlive: true,

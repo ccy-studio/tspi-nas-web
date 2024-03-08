@@ -45,7 +45,7 @@ service.interceptors.response.use(
 					.then(() => { })
 					.catch(() => { });
 			}
-			return Promise.reject(service.interceptors.response);
+			return Promise.reject(res.msg);
 		} else {
 			return res;
 		}
@@ -56,7 +56,9 @@ service.interceptors.response.use(
 			ElMessage.error('网络超时');
 		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
-		} else {
+		} else if(error.code == "ERR_BAD_REQUEST"){
+			ElMessage.error(error.response.data.msg);
+		}else {
 			if (error.response.data) ElMessage.error(error.response.statusText);
 			else ElMessage.error('接口路径找不到');
 		}

@@ -58,15 +58,16 @@
 </template>
 
 <script setup lang="ts" name="systemMenuDialog">
-import { reactive, onMounted, ref } from 'vue';
-import { storeToRefs } from 'pinia';
-// import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
+import { reactive, onMounted, ref, nextTick } from 'vue';
+// import { ElMessage } from 'element-plus';
+import service from '/@/utils/request';
+import type { FormInstance } from 'element-plus'
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
 // 定义变量内容
-const menuDialogFormRef = ref();
+const menuDialogFormRef = ref<FormInstance>();
 
 const rules = reactive({
 	resName: [{ required: true, message: '请输入完整', trigger: 'blur' }],
@@ -111,18 +112,22 @@ const state = reactive({
 
 // 打开弹窗
 const openDialog = (type: string, row?: any) => {
+	nextTick(() => {
+		menuDialogFormRef.value?.resetFields();
+	});
 	if (type === 'edit') {
 		// 模拟数据，实际请走接口
-		state.ruleForm = row;
+		state.ruleForm = JSON.parse(JSON.stringify(row));
 		state.dialog.title = '修改菜单';
 		state.dialog.submitTxt = '修 改';
 	} else {
 		state.dialog.title = '新增菜单';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
-		// nextTick(() => {
-		// 	menuDialogFormRef.value.resetFields();
-		// });
+		nextTick(() => {
+			state.ruleForm.resType = 0;
+			state.ruleForm.resDesc = ''
+		});
 	}
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
@@ -138,10 +143,20 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
-	closeDialog(); // 关闭弹窗
-	emit('refresh');
-	// if (state.dialog.type === 'add') { }
-	// setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
+	menuDialogFormRef.value?.validate((valid: any) => {
+		if (valid) {
+			//请求接口
+			service.request({
+				method: "post",
+				url: "/sys/resources/edit",
+				data: state.ruleForm
+			}).then(() => {
+				closeDialog(); // 关闭弹窗
+				emit('refresh');
+			})
+		}
+	})
+
 };
 // 页面加载时
 onMounted(() => {
