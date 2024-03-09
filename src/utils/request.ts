@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Blog: saisaiwa.com
+ * @Author: ccy
+ * @Date: 2024-03-08 13:53:35
+ * @LastEditTime: 2024-03-09 14:26:32
+ */
 import axios, { AxiosInstance } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Session, Local } from '/@/utils/storage';
@@ -35,7 +42,7 @@ service.interceptors.response.use(
 	(response) => {
 		// 对响应数据做点什么
 		const res = response.data;
-		if (res.code && res.code !== 200) {
+		if (res.code !== 200) {
 			// `token` 过期或者账号已在别处登录
 			if (res.code === 4002 || res.code === 4003) {
 				Session.clear(); // 清除浏览器全部临时缓存
@@ -44,6 +51,8 @@ service.interceptors.response.use(
 				ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
 					.then(() => { })
 					.catch(() => { });
+			} else if (res.code == 500) {
+				ElMessage.error(res.msg);
 			}
 			return Promise.reject(res.msg);
 		} else {
@@ -56,9 +65,9 @@ service.interceptors.response.use(
 			ElMessage.error('网络超时');
 		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
-		} else if(error.code == "ERR_BAD_REQUEST"){
+		} else if (error.code == "ERR_BAD_REQUEST") {
 			ElMessage.error(error.response.data.msg);
-		}else {
+		} else {
 			if (error.response.data) ElMessage.error(error.response.statusText);
 			else ElMessage.error('接口路径找不到');
 		}

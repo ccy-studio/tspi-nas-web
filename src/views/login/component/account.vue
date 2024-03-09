@@ -111,7 +111,8 @@ const onSignIn = async () => {
 			signInSuccess(isNoPower);
 		}
 	}).catch(err => {
-		console.error(err)
+		ElMessage.error(err);
+		state.loading.signIn = false;
 	})
 };
 // 登录成功后的跳转

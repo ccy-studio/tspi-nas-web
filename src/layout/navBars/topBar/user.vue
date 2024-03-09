@@ -7,7 +7,8 @@
 			<template #dropdown>
 				<el-dropdown-menu>
 					<el-dropdown-item command="large" :disabled="state.disabledSize === 'large'">大型</el-dropdown-item>
-					<el-dropdown-item command="default" :disabled="state.disabledSize === 'default'">默认</el-dropdown-item>
+					<el-dropdown-item command="default"
+						:disabled="state.disabledSize === 'default'">默认</el-dropdown-item>
 					<el-dropdown-item command="small" :disabled="state.disabledSize === 'small'">小型</el-dropdown-item>
 				</el-dropdown-menu>
 			</template>
@@ -27,24 +28,13 @@
 				</el-icon>
 			</el-badge>
 		</div>
-		<el-popover
-			ref="userNewsRef"
-			:virtual-ref="userNewsBadgeRef"
-			placement="bottom"
-			trigger="click"
-			transition="el-zoom-in-top"
-			virtual-triggering
-			:width="300"
-			:persistent="false"
-		>
+		<el-popover ref="userNewsRef" :virtual-ref="userNewsBadgeRef" placement="bottom" trigger="click"
+			transition="el-zoom-in-top" virtual-triggering :width="300" :persistent="false">
 			<UserNews />
 		</el-popover>
 		<div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
-			<i
-				class="iconfont"
-				:title="state.isScreenfull ? '关全屏' : '开全屏'"
-				:class="!state.isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"
-			></i>
+			<i class="iconfont" :title="state.isScreenfull ? '关全屏' : '开全屏'"
+				:class="!state.isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"></i>
 		</div>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-navbars-breadcrumb-user-link">
@@ -55,16 +45,17 @@
 				</el-icon>
 			</span>
 			<template #dropdown>
-				<el-dropdown-menu
-					><el-dropdown-item command="/home">首页</el-dropdown-item>
+				<el-dropdown-menu><el-dropdown-item command="/home">首页</el-dropdown-item>
 					<el-dropdown-item command="wareHouse">代码仓库</el-dropdown-item>
 					<el-dropdown-item command="/404">404</el-dropdown-item>
 					<el-dropdown-item command="/401">401</el-dropdown-item>
+					<el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
 					<el-dropdown-item divided command="logOut">退出登录</el-dropdown-item>
 				</el-dropdown-menu>
 			</template>
 		</el-dropdown>
 		<Search ref="searchRef" />
+		<ChangePwd ref="changePwdRef" @relogin="onRelogin" />
 	</div>
 </template>
 
@@ -82,8 +73,11 @@ import { Session, Local } from '/@/utils/storage';
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
 const Search = defineAsyncComponent(() => import('/@/layout/navBars/topBar/search.vue'));
+const ChangePwd = defineAsyncComponent(() => import('./changePwd.vue'));
+
 
 // 定义变量内容
+const changePwdRef = ref();
 const userNewsRef = ref();
 const userNewsBadgeRef = ref();
 const router = useRouter();
@@ -156,12 +150,15 @@ const onHandleCommandClick = (path: string) => {
 			.then(async () => {
 				// 清除缓存/token等
 				Session.clear();
+				Local.remove("token");
 				// 使用 reload 时，不需要调用 resetRoute() 重置路由
 				window.location.reload();
 			})
-			.catch(() => {});
+			.catch(() => { });
 	} else if (path === 'wareHouse') {
 		window.open('https://gitee.com/lyt-top/vue-next-admin');
+	} else if (path === 'changePwd') {
+		changePwdRef.value!.openDialog();
 	} else {
 		router.push(path);
 	}
@@ -188,6 +185,11 @@ onMounted(() => {
 		initI18nOrSize('globalComponentSize', 'disabledSize');
 	}
 });
+
+const onRelogin = () => {
+	Local.remove("token");
+	window.location.reload();
+}
 </script>
 
 <style scoped lang="scss">
@@ -195,17 +197,20 @@ onMounted(() => {
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
+
 	&-link {
 		height: 100%;
 		display: flex;
 		align-items: center;
 		white-space: nowrap;
+
 		&-photo {
 			width: 25px;
 			height: 25px;
 			border-radius: 100%;
 		}
 	}
+
 	&-icon {
 		padding: 0 10px;
 		cursor: pointer;
@@ -214,23 +219,28 @@ onMounted(() => {
 		line-height: 50px;
 		display: flex;
 		align-items: center;
+
 		&:hover {
 			background: var(--next-color-user-hover);
+
 			i {
 				display: inline-block;
 				animation: logoAnimation 0.3s ease-in-out;
 			}
 		}
 	}
+
 	:deep(.el-dropdown) {
 		color: var(--next-bg-topBarColor);
 	}
+
 	:deep(.el-badge) {
 		height: 40px;
 		line-height: 40px;
 		display: flex;
 		align-items: center;
 	}
+
 	:deep(.el-badge__content.is-fixed) {
 		top: 12px;
 	}

@@ -124,6 +124,21 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
+						path: '/system/hardDisk',
+						name: 'systemHardDisk',
+						component: () => import('/@/views/system/hardDisk/index.vue'),
+						meta: {
+							title: '磁盘管理',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin'],
+							icon: 'iconfont icon-icon-',
+						},
+					},
+					{
 						path: '/system/dept',
 						name: 'systemDept',
 						component: () => import('/@/views/system/dept/index.vue'),

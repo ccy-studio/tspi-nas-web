@@ -1,79 +1,38 @@
 <template>
 	<div class="system-user-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px">
-			<el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+			<el-form :rules="rules" ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="账户名称">
-							<el-input v-model="state.ruleForm.userName" placeholder="请输入账户名称" clearable></el-input>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="state.ruleForm.id == null">
+						<el-form-item label="用户账户" prop="userAccount">
+							<el-input maxlength="20" v-model="state.ruleForm.userAccount" placeholder="请输入账户名称"
+								clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="用户昵称">
-							<el-input v-model="state.ruleForm.userNickname" placeholder="请输入用户昵称" clearable></el-input>
+						<el-form-item label="用户昵称" prop="nickName">
+							<el-input maxlength="12" v-model="state.ruleForm.nickName" placeholder="请输入用户昵称"
+								clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="关联角色">
-							<el-select v-model="state.ruleForm.roleSign" placeholder="请选择" clearable class="w100">
-								<el-option label="超级管理员" value="admin"></el-option>
-								<el-option label="普通用户" value="common"></el-option>
-							</el-select>
+						<el-form-item label="手机号" prop="mobile">
+							<el-input type="number" maxlength="11" v-model="state.ruleForm.mobile" placeholder="请输入手机号"
+								clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="部门">
-							<el-cascader
-								:options="state.deptData"
-								:props="{ checkStrictly: true, value: 'deptName', label: 'deptName' }"
-								placeholder="请选择部门"
-								clearable
-								class="w100"
-								v-model="state.ruleForm.department"
-							>
-								<template #default="{ node, data }">
-									<span>{{ data.deptName }}</span>
-									<span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-								</template>
-							</el-cascader>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="state.ruleForm.id == null">
+						<el-form-item label="密码" prop="password">
+							<el-input maxlength="20" minlength="6" v-model="state.ruleForm.password" placeholder="请输入密码"
+								clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="手机号">
-							<el-input v-model="state.ruleForm.phone" placeholder="请输入手机号" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="邮箱">
-							<el-input v-model="state.ruleForm.email" placeholder="请输入" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="性别">
-							<el-select v-model="state.ruleForm.sex" placeholder="请选择" clearable class="w100">
-								<el-option label="男" value="男"></el-option>
-								<el-option label="女" value="女"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="账户密码">
-							<el-input v-model="state.ruleForm.password" placeholder="请输入" type="password" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="账户过期">
-							<el-date-picker v-model="state.ruleForm.overdueTime" type="date" placeholder="请选择" class="w100"> </el-date-picker>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="用户状态">
-							<el-switch v-model="state.ruleForm.status" inline-prompt active-text="启" inactive-text="禁"></el-switch>
-						</el-form-item>
-					</el-col>
+
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-form-item label="用户描述">
-							<el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
+						<el-form-item label="关联用户组">
+							<el-tree ref="treeRef" style="max-width: 600px" :data="state.userGroupArr" show-checkbox
+								node-key="id" default-expand-all highlight-current
+								:default-checked-keys="state.ruleForm.userGroupIds" :props="defaultProps" />
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -89,28 +48,46 @@
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-import { reactive, ref } from 'vue';
+import { reactive, ref, nextTick } from 'vue';
+import service from '/@/utils/request';
+import { type FormInstance, type ElTree, ElMessage } from 'element-plus'
+import { Md5 } from 'ts-md5';
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
 // 定义变量内容
-const userDialogFormRef = ref();
+const userDialogFormRef = ref<FormInstance>();
+const treeRef = ref<InstanceType<typeof ElTree>>()
+
+const validatePass = (rule: any, value: any, callback: any) => {
+	if (value == '' && (state.ruleForm.id == null || !state.ruleForm.id)) {
+		callback(new Error('请输入密码'))
+	} else {
+		callback()
+	}
+}
+
+const rules = reactive({
+	userAccount: [{ required: true, message: '请输入完整', trigger: 'blur' }],
+	nickName: [{ required: true, message: '请输入完整', trigger: 'blur' }],
+	password: [{ validator: validatePass, trigger: 'blur' }],
+})
+
+const defaultProps = {
+	label: 'groupName',
+}
+
 const state = reactive({
 	ruleForm: {
-		userName: '', // 账户名称
-		userNickname: '', // 用户昵称
-		roleSign: '', // 关联角色
-		department: [] as string[], // 部门
-		phone: '', // 手机号
-		email: '', // 邮箱
-		sex: '', // 性别
-		password: '', // 账户密码
-		overdueTime: '', // 账户过期
-		status: true, // 用户状态
-		describe: '', // 用户描述
+		id: null,
+		userAccount: "",
+		nickName: "",
+		mobile: "",
+		password: "",
+		userGroupIds: []
 	},
-	deptData: [] as DeptTreeType[], // 部门数据
+	userGroupArr: [],
 	dialog: {
 		isShowDialog: false,
 		type: '',
@@ -120,21 +97,26 @@ const state = reactive({
 });
 
 // 打开弹窗
-const openDialog = (type: string, row: RowUserType) => {
+const openDialog = (type: string, row: any) => {
+	getUserGroupData();
+	nextTick(() => {
+		userDialogFormRef.value?.resetFields();
+	})
 	if (type === 'edit') {
-		state.ruleForm = row;
+		getDetail(row.id)
 		state.dialog.title = '修改用户';
 		state.dialog.submitTxt = '修 改';
 	} else {
+		state.ruleForm.id = null;
+		state.ruleForm.password = '';
 		state.dialog.title = '新增用户';
 		state.dialog.submitTxt = '新 增';
-		// 清空表单，此项需加表单验证才能使用
-		// nextTick(() => {
-		// 	userDialogFormRef.value.resetFields();
-		// });
+		nextTick(() => {
+			treeRef.value?.setCheckedKeys([]);
+		});
 	}
 	state.dialog.isShowDialog = true;
-	getMenuData();
+
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -146,39 +128,60 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
-	closeDialog();
-	emit('refresh');
-	// if (state.dialog.type === 'add') { }
+	let dat = JSON.parse(JSON.stringify(state.ruleForm));
+	dat.userGroupIds = treeRef.value!.getCheckedKeys() as any;
+	if (dat.id == null) {
+		const md5: any = new Md5()
+		md5.appendAsciiStr(dat.password)
+		dat.password = md5.end()
+	}
+
+	userDialogFormRef.value!.validate((valid: any) => {
+		if (valid) {
+			//请求接口
+			service.request({
+				method: "post",
+				url: state.ruleForm.id == null ? "/sys/user/register" : "/sys/user/update",
+				data: dat
+			}).then(() => {
+				closeDialog(); // 关闭弹窗
+				emit('refresh');
+			}).catch(e=>{
+				ElMessage.error(e)
+			})
+		}
+	})
 };
-// 初始化部门数据
-const getMenuData = () => {
-	state.deptData.push({
-		deptName: 'vueNextAdmin',
-		createTime: new Date().toLocaleString(),
-		status: true,
-		sort: Math.random(),
-		describe: '顶级部门',
-		id: Math.random(),
-		children: [
-			{
-				deptName: 'IT外包服务',
-				createTime: new Date().toLocaleString(),
-				status: true,
-				sort: Math.random(),
-				describe: '总部',
-				id: Math.random(),
-			},
-			{
-				deptName: '资本控股',
-				createTime: new Date().toLocaleString(),
-				status: true,
-				sort: Math.random(),
-				describe: '分部',
-				id: Math.random(),
-			},
-		],
-	});
+// 初始化用户组数据
+const getUserGroupData = () => {
+	service.request({
+		method: "get",
+		url: "/sys/user-group/list",
+		params: {
+			current: 1,
+			size: -1
+		}
+	}).then(res => {
+		state.userGroupArr = res.data.rows;
+	})
 };
+
+const getDetail = (id: any) => {
+	service.request({
+		method: "get",
+		url: "/sys/user/get",
+		params: {
+			id
+		}
+	}).then(res => {
+		let dat = res.data;
+		// dat.resIds = dat.resourceItems.map((v: any) => v.id);
+		state.ruleForm = dat;
+		nextTick(() => {
+			treeRef.value?.setCheckedKeys(state.ruleForm.userGroupIds);
+		})
+	})
+}
 
 // 暴露变量
 defineExpose({
