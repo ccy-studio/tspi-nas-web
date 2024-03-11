@@ -33,6 +33,8 @@
 							@click="onRowDel(scope.row)">删除</el-button>
 						<el-button v-if="scope.row.id != 1" size="small" text type="primary"
 							@click="onResetPwd(scope.row.id)">重置密码</el-button>
+						<el-button v-auth="'admin'" size="small" text type="primary"
+							@click="onShowSk(scope.row.userAccount)">查看SK</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -153,6 +155,20 @@ const onResetPwd = (id: any) => {
 			})
 		})
 		.catch(() => { });
+}
+
+const onShowSk = (account: string) => {
+	service.request({
+		method: "get",
+		url: "/sys/user/getSk",
+		params: {
+			account
+		}
+	}).then((resp) => {
+		ElMessageBox.alert(resp.data);
+	}).catch(e => {
+		ElMessage.error(e);
+	})
 }
 
 </script>

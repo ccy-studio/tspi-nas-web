@@ -37,11 +37,11 @@ export const useUserInfo = defineStore('userInfo', {
 					// admin 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
 					let adminRoles: Array<string> = ['admin'];
 					// admin 按钮权限标识
-					let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
+					let adminAuthBtnList: Array<string> = ['admin'];
 					// test 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
 					let testRoles: Array<string> = ['common'];
 					// test 按钮权限标识
-					let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
+					let testAuthBtnList: Array<string> = ['show'];
 					// 不同用户模拟不同的用户权限
 					if (userName === 'admin') {
 						defaultRoles = adminRoles;
