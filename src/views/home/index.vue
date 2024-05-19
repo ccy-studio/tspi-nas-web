@@ -89,9 +89,9 @@ const state = reactive({
 	} as any,
 	homeOne: [
 		{
-			num1: '125,12',
+			num1: '1250',
 			num2: '-12.32',
-			num3: '订单统计信息',
+			num3: '用户数',
 			num4: 'fa fa-meetup',
 			color1: '#FF6462',
 			color2: '--next-color-primary-lighter',
@@ -100,7 +100,7 @@ const state = reactive({
 		{
 			num1: '653,33',
 			num2: '+42.32',
-			num3: '月度计划信息',
+			num3: '文件数量',
 			num4: 'iconfont icon-ditu',
 			color1: '#6690F9',
 			color2: '--next-color-success-lighter',
@@ -109,7 +109,7 @@ const state = reactive({
 		{
 			num1: '125,65',
 			num2: '+17.32',
-			num3: '年度计划信息',
+			num3: '分享文件数',
 			num4: 'iconfont icon-zaosheng',
 			color1: '#6690F9',
 			color2: '--next-color-warning-lighter',
@@ -196,26 +196,26 @@ const initLineChart = () => {
 	const option = {
 		backgroundColor: state.charts.bgColor,
 		title: {
-			text: '政策补贴额度',
+			text: '文件访问热点',
 			x: 'left',
 			textStyle: { fontSize: '15', color: state.charts.color },
 		},
 		grid: { top: 70, right: 20, bottom: 30, left: 30 },
 		tooltip: { trigger: 'axis' },
-		legend: { data: ['预购队列', '最新成交价'], right: 0 },
+		legend: { data: ['最高', '最低'], right: 0 },
 		xAxis: {
 			data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
 		},
 		yAxis: [
 			{
 				type: 'value',
-				name: '价格',
+				name: '',
 				splitLine: { show: true, lineStyle: { type: 'dashed', color: '#f5f5f5' } },
 			},
 		],
 		series: [
 			{
-				name: '预购队列',
+				name: '最高',
 				type: 'line',
 				symbolSize: 6,
 				symbol: 'circle',
@@ -231,7 +231,7 @@ const initLineChart = () => {
 				},
 			},
 			{
-				name: '最新成交价',
+				name: '最低',
 				type: 'line',
 				symbolSize: 6,
 				symbol: 'circle',
@@ -275,7 +275,7 @@ const initLineChart = () => {
 const initPieChart = () => {
 	if (!state.global.dispose.some((b: any) => b === state.global.homeChartTwo)) state.global.homeChartTwo.dispose();
 	state.global.homeChartTwo = markRaw(echarts.init(homePieRef.value, state.charts.theme));
-	var getname = ['房屋及结构物', '专用设备', '通用设备', '文物和陈列品', '图书、档案'];
+	var getname = ['广州', '上海', '北京', '山东', '安徽'];
 	var getvalue = [34.2, 38.87, 17.88, 9.05, 2.05];
 	var data = [];
 	for (var i = 0; i < getname.length; i++) {
@@ -285,7 +285,7 @@ const initPieChart = () => {
 	const option = {
 		backgroundColor: state.charts.bgColor,
 		title: {
-			text: '房屋建筑工程',
+			text: '热点地区分布',
 			x: 'left',
 			textStyle: { fontSize: '15', color: state.charts.color },
 		},
@@ -531,7 +531,7 @@ watch(
 				initPieChart();
 			}, 700);
 			setTimeout(() => {
-				initBarChart();
+				// initBarChart();
 			}, 1000);
 		});
 	},

@@ -107,8 +107,14 @@ const openDialog = (type: string, row: any) => {
 		state.dialog.title = '修改用户';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.ruleForm.id = null;
-		state.ruleForm.password = '';
+		state.ruleForm = {
+			id: null,
+			userAccount: "",
+			nickName: "",
+			mobile: "",
+			password: "",
+			userGroupIds: []
+		};
 		state.dialog.title = '新增用户';
 		state.dialog.submitTxt = '新 增';
 		nextTick(() => {
@@ -146,7 +152,7 @@ const onSubmit = () => {
 			}).then(() => {
 				closeDialog(); // 关闭弹窗
 				emit('refresh');
-			}).catch(e=>{
+			}).catch(e => {
 				ElMessage.error(e)
 			})
 		}

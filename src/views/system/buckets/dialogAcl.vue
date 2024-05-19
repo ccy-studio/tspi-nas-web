@@ -5,8 +5,8 @@
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="用户" prop="userId">
-							<el-select v-model="state.ruleForm.userId" filterable remote reserve-keyword
-								placeholder="选择用户" :remote-method="getUserArr" :loading="userLoading">
+							<el-select :disabled="state.update" v-model="state.ruleForm.userId" filterable remote
+								reserve-keyword placeholder="选择用户" :remote-method="getUserArr" :loading="userLoading">
 								<el-option v-for="item in state.userArr" :key="item.id" :label="item.userAccount"
 									:value="item.id" />
 							</el-select>
@@ -75,6 +75,7 @@ const state = reactive({
 		title: '',
 		submitTxt: '',
 	},
+	update: false,
 });
 
 // 打开弹窗
@@ -83,16 +84,22 @@ const openDialog = (type: string, row: any) => {
 	nextTick(() => {
 		dialogFormRef.value?.resetFields();
 	});
+	console.log(row)
 	if (type === 'edit') {
-		console.log(row);
-		state.ruleForm = row;
+		state.ruleForm.bucketsId = row.bucketsId;
+		state.ruleForm.userId = row.userId;
+		state.ruleForm.effect = row.effect;
+		state.ruleForm.acl = row.acl;
 		state.dialog.title = '修改';
 		state.dialog.submitTxt = '修 改';
+		state.update = true;
 	} else {
 		state.ruleForm.bucketsId = row;
+		state.ruleForm.userId = null;
+		state.ruleForm.acl = [];
+		state.update = false;
 		state.dialog.title = '新增';
 		state.dialog.submitTxt = '新 增';
-		state.ruleForm.userId = null;
 	}
 	state.dialog.isShowDialog = true;
 };
