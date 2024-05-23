@@ -47,9 +47,9 @@
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="权限范围" prop="permissionsScope">
 							<el-radio-group v-model="state.ruleForm.permissionsScope">
-								<el-radio :value="0">私有</el-radio>
-								<el-radio :value="1">资源内公开</el-radio>
-								<el-radio :value="2">全公开</el-radio>
+								<el-radio :value="0" v-if="state.ruleForm.permissions == 0">私有</el-radio>
+								<el-radio :value="1" v-if="state.ruleForm.permissions != 0">资源内公开</el-radio>
+								<el-radio :value="2" v-if="state.ruleForm.permissions != 0">全公开</el-radio>
 							</el-radio-group>
 						</el-form-item>
 					</el-col>
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts" name="systemDeptDialog">
-import { reactive, ref, nextTick } from 'vue';
+import { reactive, ref, nextTick, watch } from 'vue';
 import service from '/@/utils/request';
 import { ElMessage, type FormInstance } from 'element-plus'
 
@@ -102,6 +102,14 @@ const state = reactive({
 		title: '',
 		submitTxt: '',
 	},
+});
+
+watch(() => state.ruleForm.permissions, (newVal, oldVal) => {
+	if (newVal == 0) {
+		state.ruleForm.permissionsScope = 0;
+	} else {
+		state.ruleForm.permissionsScope = 1;
+	}
 });
 
 // 打开弹窗
@@ -139,6 +147,9 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
+	if (state.ruleForm.permissions == 0) {
+		state.ruleForm.permissionsScope = 0;
+	}
 	dialogFormRef.value?.validate((valid: any) => {
 		if (valid) {
 			//请求接口

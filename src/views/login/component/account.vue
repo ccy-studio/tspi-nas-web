@@ -1,7 +1,7 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input text placeholder="用户名 admin 或不输均为 common" v-model="state.ruleForm.userName" clearable
+			<el-input text placeholder="请输入用户名" v-model="state.ruleForm.userName" clearable
 				autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
@@ -9,7 +9,7 @@
 			</el-input>
 		</el-form-item>
 		<el-form-item class="login-animation2">
-			<el-input :type="state.isShowPassword ? 'text' : 'password'" placeholder="密码：123456"
+			<el-input :type="state.isShowPassword ? 'text' : 'password'" placeholder="请输入密码"
 				v-model="state.ruleForm.password" autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
@@ -68,8 +68,8 @@ const router = useRouter();
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
-		userName: 'admin',
-		password: 'admin',
+		userName: '',
+		password: '',
 		// code: '1234',
 	},
 	loading: {

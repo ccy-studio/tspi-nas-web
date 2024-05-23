@@ -11,7 +11,7 @@
 
 
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="资源类型" prop="resType">
+						<el-form-item label="资源协议" prop="resType">
 							<el-select v-model="state.ruleForm.resType" class="ml10" clearable placeholder="资源描述"
 								style="width: 240px">
 								<el-option v-for="item in state.resTypes" :key="item.value" :label="item.label"
@@ -118,10 +118,10 @@ const openDialog = (type: string, row?: any) => {
 	if (type === 'edit') {
 		// 模拟数据，实际请走接口
 		state.ruleForm = JSON.parse(JSON.stringify(row));
-		state.dialog.title = '修改菜单';
+		state.dialog.title = '修改资源';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增菜单';
+		state.dialog.title = '新增资源';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {

@@ -4,7 +4,7 @@
 			<el-form :rules="rules" ref="roleDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-form-item label="角色名称" prop="groupName">
+						<el-form-item label="组名称" prop="groupName">
 							<el-input v-model="state.ruleForm.groupName" placeholder="请输入用户组名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
