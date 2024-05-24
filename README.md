@@ -15,8 +15,8 @@
 		<a href="https://vitejs.dev/" target="_blank">
 		  <img src="https://img.shields.io/badge/vite-%3E2.0.0-yellow" alt="vite">
 		</a>
-		<a href="https://gitee.com/lyt-top/vue-next-admin/blob/master/LICENSE" target="_blank">
-		  <img src="https://img.shields.io/badge/license-MIT-success" alt="license">
+		<a href="https://github.com/ccy-studio/tspi-nas-web/blob/master/LICENSE" target="_blank">
+		  <img src="https://img.shields.io/badge/license-GUN-success" alt="license">
 		</a>
 	</p>
 	<p>&nbsp;</p>
