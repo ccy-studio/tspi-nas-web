@@ -34,11 +34,23 @@
 				<el-table-column prop="mountPoint" label="挂载点" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="resName" label="所属资源" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="isDelete" label="状态" show-overflow-tooltip>
+					<template #default="scope">
+						<el-tag v-if="scope.row.isDelete == 0" type="success">正常</el-tag>
+						<el-tooltip v-else class="box-item" effect="dark" content="挂载路径在系统内不存在"
+							placement="bottom-end"><el-tag type="danger">失效</el-tag>
+						</el-tooltip>
+					</template>
+				</el-table-column>
 
-				<el-table-column label="操作" show-overflow-tooltip width="140">
+				<el-table-column label="操作" show-overflow-tooltip width="200">
 					<template #default="scope">
 						<el-button v-auth="'admin'" size="small" text type="primary"
 							@click="onOpenEditDept('edit', scope.row)">修改/查看</el-button>
+						<el-button v-auth="'admin'" size="small" text type="primary"
+							@click="onDel(scope.row.id)">删除</el-button>
+						<el-button v-if="scope.row.isDelete != 0" v-auth="'admin'" size="small" text type="primary"
+							@click="onTryRecovery(scope.row)">失效恢复</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -51,6 +63,7 @@
 import { defineAsyncComponent, ref, reactive, onMounted } from 'vue';
 import service from '/@/utils/request';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
 
 const router = useRouter();
 
@@ -101,6 +114,54 @@ const onOpenBucketsInfo = (row: any) => {
 			bucketsName: row.bucketsName
 		}
 
+	})
+}
+
+const onTryRecovery = (row: any) => {
+	service.request({
+		method: "post",
+		url: "/sys/buckets/tryRecovery",
+		data: {
+			id: row.id,
+		}
+	}).then((res) => {
+		if (res.data) {
+			ElMessage({
+				message: '恢复成功',
+				grouping: true,
+				type: 'success',
+			})
+			getTableData()
+		} else {
+			ElMessage({
+				message: '恢复失败,请检查挂载路径是否存在',
+				grouping: true,
+				type: 'error',
+			})
+		}
+	})
+}
+
+const onDel = (id: number) => {
+	service.request({
+		method: "post",
+		url: "/sys/buckets/delete",
+		data: {
+			id
+		}
+	}).then(() => {
+		ElMessage({
+			message: '删除成功',
+			grouping: true,
+			type: 'success',
+		})
+		getTableData()
+	}).catch(() => {
+		ElMessage({
+			message: '删除失败',
+			grouping: true,
+			type: 'success',
+		})
 	})
 }
 
